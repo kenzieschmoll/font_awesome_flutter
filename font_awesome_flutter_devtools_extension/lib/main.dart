@@ -1,125 +1,143 @@
+import 'package:devtools_app_shared/ui.dart';
+import 'package:devtools_extensions/devtools_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'icons.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FontAwesomeGalleryApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FontAwesomeGalleryApp extends StatelessWidget {
+  const FontAwesomeGalleryApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const DevToolsExtension(
+      child: FontAwesomeGalleryHome(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class FontAwesomeGalleryHome extends StatefulWidget {
+  const FontAwesomeGalleryHome({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StatefulWidget> createState() => FontAwesomeGalleryHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class FontAwesomeGalleryHomeState extends State<FontAwesomeGalleryHome> {
+  var _searchTerm = "";
+  var _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    final filteredIcons = icons
+        .where((icon) =>
+            _searchTerm.isEmpty ||
+            icon.title.toLowerCase().contains(_searchTerm.toLowerCase()))
+        .toList();
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        _isSearching ? _searchBar(context) : _titleBar(),
+        Expanded(
+          child: GridView.builder(
+            itemCount: filteredIcons.length,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 150,
+              mainAxisExtent: 90.0,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+            itemBuilder: (context, index) {
+              final icon = filteredIcons[index];
+              return InkWell(
+                onTap: () {
+                  final iconName = 'FontAwesomeIcons.${icon.title}';
+                  extensionManager.copyToClipboard(
+                    'FontAwesomeIcons.${icon.title}',
+                    successMessage: "Copied '$iconName' to clipboard.",
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(densePadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Hero(
+                        tag: icon,
+                        child: FaIcon(
+                          icon.iconData,
+                          size: actionsIconSize,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: defaultSpacing),
+                        child: Text(icon.title),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
+      ],
+    );
+  }
+
+  AppBar _titleBar() {
+    return AppBar(
+      title: const Text("Font Awesome Flutter Gallery"),
+      actions: [
+        IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: defaultIconSize,
+            ),
+            onPressed: () {
+              ModalRoute.of(context)?.addLocalHistoryEntry(
+                LocalHistoryEntry(
+                  onRemove: () {
+                    setState(() {
+                      _searchTerm = "";
+                      _isSearching = false;
+                    });
+                  },
+                ),
+              );
+
+              setState(() {
+                _isSearching = true;
+              });
+            })
+      ],
+    );
+  }
+
+  AppBar _searchBar(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: FaIcon(
+          FontAwesomeIcons.arrowLeft,
+          size: defaultIconSize,
+        ),
+        onPressed: () {
+          setState(
+            () {
+              Navigator.pop(context);
+              _isSearching = false;
+              _searchTerm = "";
+            },
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      title: TextField(
+        onChanged: (text) => setState(() => _searchTerm = text),
+        autofocus: true,
+        decoration: const InputDecoration(border: InputBorder.none),
+      ),
     );
   }
 }

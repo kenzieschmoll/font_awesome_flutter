@@ -2,3 +2,4 @@ name: font_awesome_flutter
 version: 0.0.1
 issueTracker: https://github.com/fluttercommunity/font_awesome_flutter/issues
 materialIconCodePoint: '0xf57f'
+requiresConnection: false

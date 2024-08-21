@@ -1,0 +1,71 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "font_awesome_flutter",
+            "cwd": "font_awesome_flutter",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "font_awesome_flutter (profile mode)",
+            "cwd": "font_awesome_flutter",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "font_awesome_flutter (release mode)",
+            "cwd": "font_awesome_flutter",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "font_awesome_flutter_devtools_extension + simulated environment",
+            "cwd": "font_awesome_flutter_devtools_extension",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define=use_simulated_environment=true"
+            ],
+        },
+        {
+            "name": "font_awesome_flutter_devtools_extension + simulated environment (profile mode)",
+            "cwd": "font_awesome_flutter_devtools_extension",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "font_awesome_flutter_devtools_extension + simulated environment (release mode)",
+            "cwd": "font_awesome_flutter_devtools_extension",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "example",
+            "cwd": "font_awesome_flutter/example",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "example (profile mode)",
+            "cwd": "font_awesome_flutter/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "example (release mode)",
+            "cwd": "font_awesome_flutter/example",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
